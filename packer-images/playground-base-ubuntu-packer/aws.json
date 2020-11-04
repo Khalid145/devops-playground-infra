@@ -1,0 +1,240 @@
+{
+    "variables": {
+        "version": "",
+        "base_name": "dpg-base-ubuntu"
+    },
+    "builders": [{
+            "name": "desktop-eu-west-1",
+            "type": "amazon-ebs",
+            "ami_name": "{{user `base_name`}}-desktop-{{user `version`}}",
+            "ami_description": "Base AMI for ECSDigital's DevOpsPlayground. Ubuntu 18.04+XFACE+VNC+WETTY",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "instance_type": "m5.large",
+            "region": "eu-west-1",
+            "ami_virtualization_type": "hvm",
+            "associate_public_ip_address": "true",
+            "ebs_optimized": "true",
+            "ssh_username": "ubuntu",
+            "force_deregister": "true",
+            "tags": {
+                "Name": "DevOps Playground"
+            }
+        },
+        {
+            "name": "desktop-eu-west-2",
+            "type": "amazon-ebs",
+            "ami_name": "{{user `base_name`}}-desktop-{{user `version`}}",
+            "ami_description": "Base AMI for ECSDigital's DevOpsPlayground. Ubuntu 18.04+XFACE+VNC+WETTY",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "instance_type": "m5.large",
+            "region": "eu-west-2",
+            "ami_virtualization_type": "hvm",
+            "associate_public_ip_address": "true",
+            "ebs_optimized": "true",
+            "ssh_username": "ubuntu",
+            "force_deregister": "true",
+            "tags": {
+                "Name": "DevOps Playground"
+            }
+        },
+        {
+            "name": "wetty-eu-west-1",
+            "type": "amazon-ebs",
+            "ami_name": "{{user `base_name`}}-wetty-{{user `version`}}",
+            "ami_description": "Base AMI for ECSDigital's DevOpsPlayground. Ubuntu 18.04+WETTY",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "instance_type": "m5.large",
+            "region": "eu-west-1",
+            "ami_virtualization_type": "hvm",
+            "associate_public_ip_address": "true",
+            "ebs_optimized": "true",
+            "ssh_username": "ubuntu",
+            "force_deregister": "true",
+            "tags": {
+                "Name": "DevOps Playground"
+            }
+        },
+        {
+            "name": "wetty-eu-west-2",
+            "type": "amazon-ebs",
+            "ami_name": "{{user `base_name`}}-wetty-{{user `version`}}",
+            "ami_description": "Base AMI for ECSDigital's DevOpsPlayground. Ubuntu 18.04+WETTY",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "instance_type": "m5.large",
+            "region": "eu-west-2",
+            "ami_virtualization_type": "hvm",
+            "associate_public_ip_address": "true",
+            "ebs_optimized": "true",
+            "ssh_username": "ubuntu",
+            "force_deregister": "true",
+            "tags": {
+                "Name": "DevOps Playground"
+            }
+        },
+        {
+            "name": "minimal-eu-west-1",
+            "type": "amazon-ebs",
+            "ami_name": "{{user `base_name`}}-minimal-{{user `version`}}",
+            "ami_description": "Base AMI for ECSDigital's DevOpsPlayground. Ubuntu 18.04",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "instance_type": "m5.large",
+            "region": "eu-west-1",
+            "ami_virtualization_type": "hvm",
+            "associate_public_ip_address": "true",
+            "ebs_optimized": "true",
+            "ssh_username": "ubuntu",
+            "force_deregister": "true",
+            "tags": {
+                "Name": "DevOps Playground"
+            }
+        },
+        {
+            "name": "minimal-eu-west-2",
+            "type": "amazon-ebs",
+            "ami_name": "{{user `base_name`}}-minimal-{{user `version`}}",
+            "ami_description": "Base AMI for ECSDigital's DevOpsPlayground. Ubuntu 18.04",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "instance_type": "m5.large",
+            "region": "eu-west-2",
+            "ami_virtualization_type": "hvm",
+            "associate_public_ip_address": "true",
+            "ebs_optimized": "true",
+            "ssh_username": "ubuntu",
+            "force_deregister": "true",
+            "tags": {
+                "Name": "DevOps Playground"
+            }
+        }
+    ],
+    "provisioners": [{
+            "type": "shell",
+            "inline": [
+                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Booting...'; sleep 1; done"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get update && sudo apt-add-repository ppa:ansible/ansible",
+                "sudo apt-get update && sudo apt-get install -y language-pack-en curl wget git pwgen docker.io ansible"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": [
+                "wetty-eu-west-1",
+                "wetty-eu-west-2"
+            ],
+            "inline": [
+                "sudo apt-get update && sudo apt-get install -y nodejs yarn npm nginx"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": [
+                "desktop-eu-west-1",
+                "desktop-eu-west-2"
+            ],
+            "inline": [
+                "sudo apt-get install -y xfce4 xfce4-goodies xubuntu-desktop vnc4server"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "files",
+            "destination": "/tmp/"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo bash -c /tmp/files/user-setup.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": [
+                "wetty-eu-west-1",
+                "wetty-eu-west-2"
+            ],
+            "inline": [
+                "sudo cp /tmp/files/nginx.conf /etc/nginx/nginx.conf",
+                "sudo chmod +x /tmp/files/*.sh",
+                "sudo bash -c /tmp/files/wetty-user-setup.sh",
+                "sudo cp /tmp/files/wetty.service /etc/systemd/system/wetty.service",
+                "sudo npm i -g wetty.js",
+                "sudo systemctl daemon-reload",
+                "sudo systemctl enable nginx",
+                "sudo systemctl start nginx",
+                "sudo systemctl enable wetty",
+                "sudo systemctl start wetty"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": [
+                "desktop-eu-west-1",
+                "desktop-eu-west-2"
+            ],
+            "inline": [
+                "sudo mkdir -p /home/playground/.vnc",
+                "sudo bash -c /tmp/files/vnc-setup.sh",
+
+                "echo --> Copying the xfce4 panel config file to bypass the panel config selection menu...",
+                "sudo mkdir -p /home/playground/.config/xfce4/xfconf/xfce-perchannel-xml/",
+                "sudo cp /tmp/files/xfce4-panel.xml /home/playground/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml",
+                "sudo chown playground: -R /home/playground/.config/",
+                "sudo apt-get purge -y --auto-remove light-locker",
+
+                "sudo cp /tmp/files/vncserver@.service /etc/systemd/system/vncserver@.service"
+            ]
+        }
+    ]
+}

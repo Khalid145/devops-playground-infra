@@ -1,0 +1,248 @@
+<html>
+
+<head>
+    <title>ECSD Meetup Playground</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="./script.js"></script>
+    <style>
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+        
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">ECSD Meetup Playground</a>
+    </nav>
+    <br>
+    <div class="container">
+        <div class="container" align="center">
+            <button id=create-button type="button" class="btn btn-success openBtn" data-toggle="modal" data-target="#createInfraModal" onclick="getSoftwareDependency()">
+                Create Playground Environment
+            </button>
+            <button id=destroy-button type="button" class="btn btn-danger" onclick="destroyInfrastructure()">
+                Delete Playground Environment
+            </button>
+            <button id=add-software-button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSoftwareModal">
+                Add New Software Dependency
+            </button>
+        </div>
+        <div class="modal fade" id="createInfraModal" tabindex="-1" role="dialog" aria-labelledby="createInfraModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createInfraModalLabel">Create Playground Environment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="instanceQuantityInput">Instance Quantity: (Required)</label>
+                                <input id="instance-quantity" type="number" class="form-control" id="exampleFormControlInput1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="instanceTypeSelector">Instance Type: (Required)</label>
+                                <select id="instance-type" class="form-control" id="exampleFormControlSelect1" required>
+                                    <option>t2.micro</option>
+                                    <option>t2.medium</option>
+                                    <option>t2.large</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="softwareDependencySelector">Packages To Install:</label>
+                                <select id="software-dependency" multiple="multiple" class="form-control">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="githubUrlInput">Playground GitHub Repo URL:</label>
+                                <input id="git-url" type="text" class="form-control" id="exampleFormControlInput1">
+                            </div>
+                            <button type="submit" class="btn btn-primary" onclick="createInfrastructure()" data-dismiss="modal">Create</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addSoftwareModal" tabindex="-1" role="dialog" aria-labelledby="addSoftwareModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createInfraModalLabel">Add A New Software Dependency</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="instanceQuantityInput">YAML Filename: (Include file extention i.e.file.yml)</label>
+                                <input id="yml-filename" type="text" class="form-control" id="exampleFormControlInput1">
+                            </div>
+                            <button type="submit" class="btn btn-primary" onclick="addNewSoftwareDependency()" data-dismiss="modal">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div align="center">
+        <b>Automatically Checks For Updates Every Second</b>
+    </div>
+    <div class="d-flex justify-content-center" style="padding-top:10px">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div class="d-flex justify-content-center" style="padding-top:10px">
+        <div id="userInfoPopup"></div>
+    </div>
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-sm">
+                <h4 align="center">Phase 1 - VPC</h4>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table" ; id="vpcTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Updated Date/Time</th>
+                                <th scope="col">Terraform State</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vpctbody">
+                            <tr class="p-3 mb-2 bg-light text-dark">
+                                <td scope="col"></td>
+                                <td scope="col">Checking for data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm">
+                <h4 align="center">Phase 2 - Guacamole</h4>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table" id="guacamoleTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Updated Date/Time</th>
+                                <th scope="col">Terraform State</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guacamoletbody">
+                            <tr class="p-3 mb-2 bg-light text-dark">
+                                <td scope="col"></td>
+                                <td scope="col">Checking for data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm">
+                <h4 align="center">Phase 3 - Nachos</h4>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table" id="nachosTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Updated Date/Time</th>
+                                <th scope="col">Terraform State</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nachostbody">
+                            <tr class="p-3 mb-2 bg-light text-dark">
+                                <td scope="col"></td>
+                                <td scope="col">Checking for data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm" style="padding-top:30px">
+                <h4>Instance Configuration Status</h4>
+                <h6>
+                    <div id="totalCount"></div>
+                </h6>
+                <!-- <div id="allocateButton"></div>
+                <div class="modal fade" id="allocateModal" tabindex="-1" role="dialog" aria-labelledby="addSoftwareModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="allocateModalLabel">Allocate Instance To A Participant</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="instanceQuantityInput">Participant's Name:</label>
+                                        <input id="participant-name" type="text" class="form-control" id="exampleFormControlInput1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="instanceQuantityInput">Participant's Email:</label>
+                                        <input id="participant-email" type="text" class="form-control" id="exampleFormControlInput1">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" onclick="allocateInstance()" data-dismiss="modal">Send</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <div id="guacUrl"></div>
+                <br>
+                <button type="button" class="btn btn-success">
+                    Success <span class="badge badge-light"><div id="completedCount"></div></span>
+                </button>
+                <button type="button" class="btn btn-warning">
+                        Waiting For Response <span class="badge badge-light"><div id="waitingCount"></div></span>
+                </button>
+                <button type="button" class="btn btn-danger">
+                        Failed <span class="badge badge-light"><div id="failedCount"></div></span>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    Skipped <span class="badge badge-light"><div id="skippedCount"></div></span>
+                </button>
+                <br>
+                <br>
+                <!-- <div class="table-wrapper-scroll-y my-custom-scrollbar"> -->
+                <table class="table" id="instanceTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Instance ID</th>
+                            <th scope="col">Wetty URL</th>
+                            <th scope="col">Instance Username</th>
+                            <th scope="col">Instance Password</th>
+                            <th scope="col">Ansible Status</th>
+                            <th scope="col">Allocated To</th>
+                        </tr>
+                    </thead>
+                    <tbody id="instancebody">
+                        <tr class="p-3 mb-2 bg-light text-dark">
+                            <td scope="col"></td>
+                            <td scope="col"></td>
+                            <td scope="col"></td>
+                            <td scope="col">Checking for data</td>
+                            <td scope="col"></td>
+                            <td scope="col"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

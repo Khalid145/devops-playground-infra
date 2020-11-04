@@ -1,0 +1,50 @@
+version: '3.5'
+services:
+  mysql:
+    build: ./mysql
+    restart: always
+    networks:
+      guacamole-net:
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+  gserver:
+    image: guacamole/guacd:1.0.0
+    restart: always
+    networks:
+      guacamole-net:
+    depends_on:
+      - mysql    
+  gclient:
+    image: guacamole/guacamole:1.0.0
+    restart: always
+    depends_on:  
+      - mysql
+      - gserver
+    environment:
+      GUACD_HOSTNAME: gserver
+      MYSQL_HOSTNAME: mysql
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      guacamole-net:
+  nginx: 
+    build: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - gclient
+    networks:
+      guacamole-net: 
+volumes:
+  mysql_data:
+
+networks:
+  guacamole-net:
+

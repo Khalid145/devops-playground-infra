@@ -1,0 +1,14 @@
+# Guacamole provider
+# terraform-provider-guacamole
+
+# Terraform files
+terraform.tfstate*
+terraform.tfvars
+*.terraform
+*.plan
+*.out
+
+# Misc
+.DS_Store
+*.pem
+payload.json

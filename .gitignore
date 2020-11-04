@@ -1,0 +1,19 @@
+# Terraform files
+terraform.tfstate*
+terraform.tfvars
+*.terraform
+*.plan
+*.out
+
+# Ansible files
+master-playbook.yml
+0
+status.log
+ansible-output.*
+
+# Misc
+.DS_Store
+*.pem
+cloud-handler.zip
+notification-listener.zip
+web-handler.zip

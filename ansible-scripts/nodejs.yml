@@ -1,0 +1,14 @@
+---
+- name: Install NodeJs and NPM.
+  hosts: 127.0.0.1
+  connection: local
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Install base packages
+      apt: name={{ item }} state=installed
+      with_items:
+        - nodejs
+        - npm
+    

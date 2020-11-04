@@ -1,0 +1,18 @@
+[Unit]
+Description=Start VNC4Server server at startup
+After=syslog.target network.target
+
+[Service]
+Type=forking
+User=playground
+Group=playground
+PIDFile=/home/playground/.vnc/%H:%i.pid
+ExecStartPre=-/usr/bin/vnc4server -kill :%i > /dev/null 2>&1
+ExecStart=/usr/bin/vnc4server -depth 24 -geometry 1280x800 :%i
+ExecStop=/usr/bin/vnc4server -kill :%i
+KillSignal=SIGQUIT
+TimeoutStopSec=5
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
